@@ -167,7 +167,7 @@ app.get("/tweets/:tweetId/", authenticateToken, async (request, response) => {
     const getTweetDetailsQuery = `
         SELECT tweet,
         COUNT(DISTINCT(like.like_id)) AS likes,
-        COUNT(DISTINCT(reply.reply_id AS replies,
+        COUNT(DISTINCT(reply.reply_id)) AS replies,
             tweet.date_time AS dateTime
         FROM tweet INNER JOIN like ON tweet.tweet_id=like.tweet_id INNER JOIN reply ON
         reply.tweet_id=tweet.tweet_id 
@@ -182,7 +182,7 @@ app.get("/tweets/:tweetId/", authenticateToken, async (request, response) => {
 });
 //Get tweet liked Users API-7
 app.get(
-  "/tweets/:tweetId/likes",
+  "/tweets/:tweetId/likes/",
   authenticateToken,
   async (request, response) => {
     const { tweetId } = request;
@@ -261,9 +261,9 @@ app.get("/user/tweets/", authenticateToken, async (request, response) => {
     COUNT(DISTINCT(reply.reply_id)) AS replies,
     tweet.date_time AS dateTime 
     FROM 
-    user INNER JOIN tweet ON user.user_id=tweet.user_id
-    INNER JOIN like ON like.tweet_id=tweet.tweet_id
-    INNER JOIN reply ON reply.tweet_id=tweet.tweet_id
+    user INNER JOIN tweet ON user.user_id = tweet.user_id
+    INNER JOIN like ON like.tweet_id = tweet.tweet_id
+    INNER JOIN reply ON reply.tweet_id = tweet.tweet_id
     WHERE
     user.user_id=${user_id}
     GROUP BY
